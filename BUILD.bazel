@@ -1,0 +1,627 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+# TODO: move to bazelrc?
+copts = [
+    "-std=c++17",
+]
+
+cc_library(
+    name = "glfw3",
+    srcs = select({
+        "@platforms//os:macos": [
+            "glfw3/prebuilt/mac/libglfw3.a",
+        ],
+        "@platforms//os:linux": [
+            "glfw3/prebuilt/linux/libglfw3.a",
+        ],
+    }),
+    hdrs = [
+        "glfw3/include/mac/glfw3.h",
+        "glfw3/include/mac/glfw3native.h",
+    ],
+    copts = copts,
+    includes = [
+        "glfw3/include/mac",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "png",
+    srcs = select({
+        "@platforms//os:macos": [
+            "png/prebuilt/mac/libpng.a",
+        ],
+        "@platforms//os:ios": [
+            "png/prebuilt/ios/libpng.a",
+        ],
+        "@//platforms:is_android": [
+            "png/prebuilt/android/x86/libpng.a",
+        ],
+    }),
+    hdrs = [
+        "png/include/mac/png.h",
+        "png/include/mac/pngconf.h",
+        "png/include/mac/pnglibconf.h",
+    ],
+    copts = copts,
+    includes = [
+        "png/include/mac",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "rapidxml",
+    srcs = [],
+    hdrs = [
+        "rapidxml/rapidxml.hpp",
+        "rapidxml/rapidxml_sax3.hpp",
+    ],
+    copts = copts,
+    includes = [
+        "rapidxml",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "jpeg",
+    srcs = select({
+        "@platforms//os:macos": [
+            "jpeg/prebuilt/mac/libjpeg.a",
+        ],
+        "@platforms//os:ios": [
+            "jpeg/prebuilt/ios/libjpeg.a",
+        ],
+        "@platforms//os:linux": [
+            "jpeg/prebuilt/linux/64-bit/libjpeg.a",
+        ],
+        "@//platforms:is_android": [
+            "jpeg/prebuilt/android/x86/libjpeg.a",
+        ],
+    }),
+    hdrs = select({
+        "@platforms//os:macos": [
+            "jpeg/include/mac/jpeglib.h",
+            "jpeg/include/mac/jconfig.h",
+            "jpeg/include/mac/jmorecfg.h",
+        ],
+        "@platforms//os:ios": [
+            "jpeg/include/ios/jpeglib.h",
+            "jpeg/include/ios/jerror.h",
+            "jpeg/include/ios/jconfig.h",
+            "jpeg/include/ios/jmorecfg.h",
+        ],
+        "@platforms//os:linux": [
+            "jpeg/include/linux/jpeglib.h",
+            "jpeg/include/linux/jconfig.h",
+            "jpeg/include/linux/jmorecfg.h",
+        ],
+        "@//platforms:is_android": [
+            "jpeg/include/android/jpeglib.h",
+            "jpeg/include/android/jerror.h",
+            "jpeg/include/android/jconfig.h",
+            "jpeg/include/android/jmorecfg.h",
+        ],
+    }),
+    copts = copts,
+    includes = select({
+        "@platforms//os:macos": [
+            "jpeg/include/mac",
+        ],
+        "@platforms//os:ios": [
+            "jpeg/include/ios",
+        ],
+        "@platforms//os:linux": [
+            "jpeg/include/linux",
+        ],
+        "@//platforms:is_android": [
+            "jpeg/include/android",
+        ],
+    }),
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "webp",
+    srcs = select({
+        "@platforms//os:macos": [
+            "webp/prebuilt/mac/libwebp.a",
+        ],
+        "@platforms//os:ios": [
+            "webp/prebuilt/ios/libwebp.a",
+        ],
+        "@platforms//os:linux": [
+            "webp/prebuilt/linux/64-bit/libwebp.a",
+        ],
+        "@//platforms:is_android": [
+            "webp/prebuilt/android/x86/libwebp.a",
+        ],
+    }),
+    hdrs = [
+        "webp/include/mac/decode.h",
+        "webp/include/mac/types.h",
+    ],
+    copts = copts,
+    includes = [
+        "webp/include/mac",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "tinyxml2",
+    srcs = [
+        "tinyxml2/tinyxml2.cpp",
+    ],
+    hdrs = [
+        "tinyxml2/tinyxml2.h",
+    ],
+    copts = copts,
+    includes = [
+        "tinyxml2",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "unzip",
+    srcs = glob([
+        "unzip/*.cpp",
+    ]),
+    hdrs = [
+        "unzip/crypt.h",
+        "unzip/ioapi.h",
+        "unzip/ioapi_mem.h",
+        "unzip/unzip.h",
+    ],
+    copts = copts,
+    includes = [
+        "unzip",
+    ],
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@platforms//os:macos": [
+            "zlib",
+        ],
+        "//conditions:default": [],
+    }),
+)
+
+cc_library(
+    name = "tinydir",
+    hdrs = [
+        "tinydir/tinydir.h",
+    ],
+    copts = copts,
+    includes = [
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "md5",
+    srcs = [
+        "md5/md5.c",
+    ],
+    hdrs = [
+        "md5/md5.h",
+    ],
+    includes = [
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "json",
+    hdrs = glob([
+        "json/**/*.h",
+    ]),
+    copts = copts,
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "freetype2",
+    srcs = select({
+        "@platforms//os:macos": [
+            "freetype2/prebuilt/mac/libfreetype.a",
+        ],
+        "@platforms//os:ios": [
+            "freetype2/prebuilt/ios/libfreetype.a",
+        ],
+        "@platforms//os:linux": [
+            "freetype2/prebuilt/linux/64-bit/libfreetype.a",
+        ],
+        "@//platforms:is_android": [
+            "freetype2/prebuilt/android/x86/libfreetype.a",
+        ],
+    }),
+    hdrs = glob([
+        # these files do not differ between mac and ios
+        "freetype2/include/mac/freetype2/**/*.h",
+    ]),
+    copts = copts,
+    includes = [
+        "freetype2/include/mac/freetype2",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "poly2tri",
+    srcs = glob([
+        "poly2tri/**/*.cc",
+    ]),
+    hdrs = glob([
+        "poly2tri/**/*.h",
+    ]),
+    copts = copts,
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "edtaa3func",
+    srcs = [
+        "edtaa3func/edtaa3func.cpp",
+    ],
+    hdrs = [
+        "edtaa3func/edtaa3func.h",
+    ],
+    copts = copts,
+    includes = [
+        "edtaa3func",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "ConvertUTF",
+    srcs = [
+        "ConvertUTF/ConvertUTF.c",
+        "ConvertUTF/ConvertUTFWrapper.cpp",
+    ],
+    hdrs = [
+        "ConvertUTF/ConvertUTF.h",
+    ],
+    includes = [
+        "ConvertUTF",
+    ],
+    visibility = ["//visibility:public"],
+    # TODO: split c/cpp to apply cpp opts
+    #copts = copts,
+)
+
+cc_library(
+    name = "fastlz",
+    srcs = glob([
+        "recast/fastlz/*.c",
+    ]),
+    hdrs = glob([
+        "recast/fastlz/*.h",
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "fmod",
+    srcs = glob([
+        "linux-specific/fmod/prebuilt/64-bit/*",
+    ]),
+    hdrs = glob([
+        "linux-specific/fmod/include/*.h",
+        "linux-specific/fmod/include/*.hpp",
+    ]),
+    includes = ["linux-specific/fmod/include"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "glew",
+    hdrs = [
+        "win32-specific/gles/include/OGLES/GL/glew.h",
+    ],
+    includes = [
+        "win32-specific/gles/include/OGLES",
+    ],
+    #srcs = [
+    #    "win32-specific/gles/include/OGLES/GL/glew.c",
+    #],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "recast",
+    srcs = glob([
+        "recast/Detour/*.cpp",
+        "recast/DetourCrowd/*.cpp",
+        "recast/DebugUtils/*.cpp",
+        "recast/DetourTileCache/*.cpp",
+        "recast/Recast/*.cpp",
+    ]),
+    hdrs = glob([
+        "recast/Detour/*.h",
+        "recast/DetourCrowd/*.h",
+        "recast/DebugUtils/*.h",
+        "recast/DetourTileCache/*.h",
+        "recast/Recast/*.h",
+    ]),
+    copts = copts,
+    visibility = ["//visibility:public"],
+    deps = ["fastlz"],
+)
+
+cc_library(
+    name = "bullet",
+    srcs = select({
+        "@platforms//os:macos": [
+            "bullet/prebuilt/mac/libBulletDynamics.a",
+            "bullet/prebuilt/mac/libBulletCollision.a",
+            "bullet/prebuilt/mac/libBulletMultiThreaded.a",
+            "bullet/prebuilt/mac/libLinearMath.a",
+            "bullet/prebuilt/mac/libMiniCL.a",
+        ],
+        "@platforms//os:ios": [
+            "bullet/prebuilt/ios/libBulletDynamics.a",
+            "bullet/prebuilt/ios/libBulletCollision.a",
+            "bullet/prebuilt/ios/libBulletMultiThreaded.a",
+            "bullet/prebuilt/ios/libLinearMath.a",
+            "bullet/prebuilt/ios/libMiniCL.a",
+        ],
+        # NOTE: linker order matters here
+        "@platforms//os:linux": [
+            "bullet/prebuilt/linux/64-bit/libBulletDynamics.a",
+            "bullet/prebuilt/linux/64-bit/libBulletCollision.a",
+            "bullet/prebuilt/linux/64-bit/libBulletMultiThreaded.a",
+            "bullet/prebuilt/linux/64-bit/libLinearMath.a",
+            "bullet/prebuilt/linux/64-bit/libMiniCL.a",
+        ],
+        "@//platforms:is_android": [
+            "bullet/prebuilt/android/x86/libBulletDynamics.a",
+            "bullet/prebuilt/android/x86/libBulletCollision.a",
+            "bullet/prebuilt/android/x86/libBulletMultiThreaded.a",
+            "bullet/prebuilt/android/x86/libLinearMath.a",
+            "bullet/prebuilt/android/x86/libMiniCL.a",
+        ],
+    }),
+    hdrs = glob([
+        "bullet/include/bullet/**/*.h",
+    ]),
+    copts = copts,
+    includes = [
+        "bullet/include",
+        "bullet/include/bullet",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "clipper",
+    srcs = [
+        "clipper/clipper.cpp",
+    ],
+    hdrs = [
+        "clipper/clipper.hpp",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "xxhash",
+    srcs = [
+        "xxhash/xxhash.c",
+    ],
+    hdrs = [
+        "xxhash/xxhash.h",
+    ],
+    includes = [
+        "xxhash",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "glsl-optimizer",
+    srcs = select({
+        "@platforms//os:macos": [
+            "glsl-optimizer/prebuilt/mac/libglsl_optimizer.a",
+            "glsl-optimizer/prebuilt/mac/libglcpp-library.a",
+            "glsl-optimizer/prebuilt/mac/libmesa.a",
+        ],
+        "@platforms//os:ios": [
+            "glsl-optimizer/prebuilt/ios/libglsl_optimizer.a",
+            "glsl-optimizer/prebuilt/ios/libglcpp-library.a",
+            "glsl-optimizer/prebuilt/ios/libmesa.a",
+        ],
+    }),
+    hdrs = [
+        "glsl-optimizer/include/glsl_optimizer.h",
+    ],
+    copts = copts,
+    includes = [
+        "glsl-optimizer/include",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "chipmunk",
+    srcs = select({
+        "@platforms//os:macos": [
+            "chipmunk/prebuilt/mac/libchipmunk.a",
+        ],
+        "@platforms//os:ios": [
+            "chipmunk/prebuilt/ios/libchipmunk.a",
+        ],
+        "@platforms//os:linux": [
+            "chipmunk/prebuilt/linux/64-bit/libchipmunk.a",
+        ],
+        # TODO: arm for non-simulator
+        "@//platforms:is_android": [
+            "chipmunk/prebuilt/android/x86/libchipmunk.a",
+        ],
+    }),
+    hdrs = glob([
+        "chipmunk/include/chipmunk/*.h",
+    ]),
+    copts = copts,
+    includes = [
+        "chipmunk/include",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "zlib",
+    srcs = select({
+        "@platforms//os:macos": [
+            "zlib/prebuilt/mac/libz.a",
+        ],
+        "@platforms//os:linux": [
+        ],
+        "@//platforms:is_android": [
+            "zlib/prebuilt/android/x86/libz.a",
+        ],
+    }),
+    hdrs = [
+        "zlib/include/zconf.h",
+        "zlib/include/zlib.h",
+    ],
+    copts = copts,
+    includes = [
+        "zlib/include",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "openssl",
+    srcs = select({
+        "@platforms//os:macos": [
+            "openssl/prebuilt/mac/libssl.a",
+            "openssl/prebuilt/mac/libcrypto.a",
+        ],
+        "@platforms//os:ios": [
+            "openssl/prebuilt/ios/libssl.a",
+            "openssl/prebuilt/ios/libcrypto.a",
+        ],
+        "@//platforms:is_android": [
+            # order is required here, with ssl first
+            "openssl/prebuilt/android/x86/libssl.a",
+            "openssl/prebuilt/android/x86/libcrypto.a",
+        ],
+    }),
+    hdrs = select({
+        "@platforms//os:macos": glob([
+            "openssl/include/macos/*.h",
+        ]),
+        "@platforms//os:ios": glob([
+            "openssl/include/ios/*.h",
+        ]),
+        "@//platforms:is_android": glob([
+            "openssl/include/android/openssl/*.h",
+        ]),
+    }),
+    includes = select({
+        "@platforms//os:macos": [
+            "openssl/include/macos",
+        ],
+        "@platforms//os:ios": [
+            "openssl/include/ios",
+        ],
+        "@//platforms:is_android": [
+            "openssl/include/android",
+        ],
+    }),
+    visibility = ["//visibility:public"],
+    alwayslink = 1,
+)
+
+cc_library(
+    name = "curl",
+    srcs = select({
+        "@platforms//os:macos": [
+            "curl/prebuilt/mac/libcurl.a",
+        ],
+        "@platforms//os:ios": [
+            "curl/prebuilt/ios/libcurl.a",
+        ],
+        "@//platforms:is_android": [
+            "curl/prebuilt/android/x86/libcurl.a",
+        ],
+    }),
+    hdrs = select({
+        "@platforms//os:macos": glob([
+            "curl/include/mac/curl/*.h",
+        ]),
+        "@platforms//os:ios": glob([
+            "curl/include/ios/curl/*.h",
+        ]),
+        "@//platforms:is_android": glob([
+            "curl/include/android/curl/*.h",
+        ]),
+    }),
+    copts = copts,
+    includes = select({
+        "@platforms//os:macos": [
+            "curl/include/mac",
+        ],
+        "@platforms//os:ios": [
+            "curl/include/ios",
+        ],
+        "@//platforms:is_android": [
+            "curl/include/android",
+        ],
+    }),
+    visibility = ["//visibility:public"],
+    deps = ["openssl"],
+    alwayslink = 1,
+)
+
+cc_library(
+    name = "pvmp3dec",
+    # TODO no op for other platforms?
+    srcs = glob([
+        "android-specific/pvmp3dec/src/*.cpp",
+    ]),
+    hdrs = glob([
+        "android-specific/pvmp3dec/include/*.h",
+        "android-specific/pvmp3dec/src/*.h",
+    ]),
+    copts = copts,
+    includes = [
+        "android-specific/pvmp3dec/include",
+        "android-specific/pvmp3dec/src",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "tremolo",
+    # TODO no op for other platforms?
+    srcs = [
+        "android-specific/tremolo/Tremolo/bitwise.c",
+        "android-specific/tremolo/Tremolo/codebook.c",
+        "android-specific/tremolo/Tremolo/dsp.c",
+        "android-specific/tremolo/Tremolo/floor0.c",
+        "android-specific/tremolo/Tremolo/floor1.c",
+        "android-specific/tremolo/Tremolo/floor_lookup.c",
+        "android-specific/tremolo/Tremolo/framing.c",
+        "android-specific/tremolo/Tremolo/mapping0.c",
+        "android-specific/tremolo/Tremolo/mdct.c",
+        "android-specific/tremolo/Tremolo/misc.c",
+        "android-specific/tremolo/Tremolo/res012.c",
+        "android-specific/tremolo/Tremolo/treminfo.c",
+        "android-specific/tremolo/Tremolo/vorbisfile.c",
+    ],
+    hdrs = glob([
+        "android-specific/tremolo/Tremolo/*.h",
+    ]),
+    defines = ["ONLY_C"],
+    includes = [
+        "android-specific/tremolo",
+    ],
+    visibility = ["//visibility:public"],
+    alwayslink = 1,
+)
